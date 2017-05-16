@@ -29,6 +29,7 @@ public:
 
     void catchException( std::exception ex ) {
         this->exception = ex;
+        this->isValueSet = true;
         this->isExceptionCatched = true;
     }
 
