@@ -4,8 +4,11 @@
 
 #include <iostream>
 #include <thread>
-
 #include <vector>
+
+#include "State.h"
+#include "Future.h"
+#include "Promise.h"
 
 int main( ) {
 

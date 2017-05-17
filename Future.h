@@ -8,6 +8,7 @@
 #include <memory>
 #include <condition_variable>
 #include <stdexcept>
+
 #include "State.h"
 
 class ValueAlreadySet : public std::exception {
