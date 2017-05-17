@@ -10,7 +10,7 @@ class State {
 public:
     State( ) : isValueSet( false ), isExceptionCatched( false ) { }
 
-    bool isValueSet( ) {
+    bool getIsValueSet( ) {
         return this->isValueSet;
     }
 
@@ -19,11 +19,11 @@ public:
         this->isValueSet = true;
     }
 
-    T value() {
+    T getValue() {
         return this->value;
     }
 
-    bool isExceptionCatched( ) {
+    bool getIsExceptionCatched( ) {
         return this->isExceptionCatched;
     }
 
@@ -33,7 +33,7 @@ public:
         this->isExceptionCatched = true;
     }
 
-    std::exception exception() {
+    std::exception getException() {
         return this->exception;
     }
 

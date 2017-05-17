@@ -32,8 +32,13 @@ public:
     }
 };
 
+class IsCompletedCheckable {
+public:
+    virtual bool isCompleted( ) = 0;
+};
+
 template<typename T>
-class Future {
+class Future : public IsCompletedCheckable {
 public:
     Future( std::shared_ptr<State<T>> state,
             std::shared_ptr<std::mutex> mutex,
@@ -43,30 +48,31 @@ public:
     };
 
     T get( ) {
-        std::unique_lock<std::mutex> lock( *mutex );
-        conditionVariable->wait( lock, [ & ]( ) {
-            return state->isValueSet( );
+        std::unique_lock<std::mutex> lock( *this->mutex );
+        this->conditionVariable->wait( lock, [ & ]( ) {
+            return this->state->getIsValueSet( );
         } );
-        if ( state->isExceptionCatched() ) {
-            throw state->exception( );
+        if ( this->state->getIsExceptionCatched( )) {
+            throw this->state->getException( );
         }
-        return state->value( );
+        return this->state->getValue( );
     }
 
-    T tryGet( ) {
-        std::unique_lock<std::mutex> lock( *mutex );
-        if ( state->isValueSet( )) {
-            if ( state->isExceptionCatched( )) {
-                throw state->exception( );
+    bool tryGet( T &value ) {
+        std::unique_lock<std::mutex> lock( *this->mutex );
+        if ( this->state->getIsValueSet( )) {
+            if ( this->state->getIsExceptionCatched( )) {
+                throw this->state->getException( );
             }
-            return state->value( );
+            value = this->state->getValue( );
+            return true;
         }
-        return null;
+        return false;
     }
 
     bool isCompleted( ) {
-        std::unique_lock<std::mutex> lock( *mutex );
-        return state->isValueSet( );
+        std::unique_lock<std::mutex> lock( *this->mutex );
+        return this->state->getIsValueSet( );
     }
 
 private:
